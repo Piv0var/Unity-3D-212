@@ -30,7 +30,6 @@ public class CameraScript : MonoBehaviour
     {
         if (isFpv)
         {
-            // Обработка изменения расстояния камеры с ограничениями
             float wheel = Input.mouseScrollDelta.y;
             c *= 1 - wheel / 10.0f;
             c = Vector3.ClampMagnitude(c, maxDistance);
@@ -39,13 +38,11 @@ public class CameraScript : MonoBehaviour
                 c = c.normalized * minDistance;
             }
 
-            // Обработка вращения камеры
             Vector2 lookValue = lookAction.ReadValue<Vector2>();
             cameraAngels.x += lookValue.y * sensitivityV;
             cameraAngels.y += lookValue.x * sensitivityH;
             this.transform.eulerAngles = cameraAngels;
 
-            // Проверка перекрытия поля зрения и реализация плавного перехода
             if (c.magnitude < minDistance + 1.0f)
             {
                 c = Vector3.Lerp(c, c.normalized * minDistance, Time.deltaTime * smoothTransitionSpeed);
@@ -55,7 +52,6 @@ public class CameraScript : MonoBehaviour
                                        Quaternion.Euler(0, cameraAngels.y, 0) * c;
         }
 
-        // Переключение камеры
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (isFpv)
