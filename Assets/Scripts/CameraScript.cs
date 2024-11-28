@@ -12,9 +12,12 @@ public class CameraScript : MonoBehaviour
     private float sensitivityH = 0.2F;
     private float sensitivityV = -0.25F;
 
-    private float minDistance = 2.0f;  
-    private float maxDistance = 10.0f; 
-    private float smoothTransitionSpeed = 5.0f; 
+    private float minDistance = 2.0f;
+    private float maxDistance = 10.0f;
+    private float smoothTransitionSpeed = 5.0f;
+
+    private float minVerticalAngle = 35.0f;
+    private float maxVerticalAngle = 75.0f;
 
     void Start()
     {
@@ -32,6 +35,7 @@ public class CameraScript : MonoBehaviour
         {
             float wheel = Input.mouseScrollDelta.y;
             c *= 1 - wheel / 10.0f;
+            GameState.isFpv = c.magnitude < 0.25f;
             c = Vector3.ClampMagnitude(c, maxDistance);
             if (c.magnitude < minDistance)
             {
@@ -41,6 +45,9 @@ public class CameraScript : MonoBehaviour
             Vector2 lookValue = lookAction.ReadValue<Vector2>();
             cameraAngels.x += lookValue.y * sensitivityV;
             cameraAngels.y += lookValue.x * sensitivityH;
+
+            cameraAngels.x = Mathf.Clamp(cameraAngels.x, minVerticalAngle, maxVerticalAngle);
+
             this.transform.eulerAngles = cameraAngels;
 
             if (c.magnitude < minDistance + 1.0f)
