@@ -5,8 +5,20 @@ public class NewMonoBehaviourScript : MonoBehaviour
 {
     private Light[] dayLights;
     private Light[] nightLights;
+    private AudioSource dayAmbient;
+    private AudioSource nightAmbient;
     void Start()
     {
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        if (audioSources == null || audioSources.Length != 2)
+        {
+            Debug.LogError("NewMonoBehaviourScript::Start AudioSource error");
+        }
+        else
+        {
+            dayAmbient = audioSources[0];
+            nightAmbient = audioSources[1];
+        }
         dayLights = GameObject
             .FindGameObjectsWithTag("DayLight")
             .Select(x => x.GetComponent<Light>())
@@ -17,6 +29,12 @@ public class NewMonoBehaviourScript : MonoBehaviour
             .ToArray();
         GameState.isDay = true;
         SetLights(GameState.isDay);
+        GameState.AddChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.ambientVolume));
+        GameState.AddChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.isSoundsMuted));
     }
 
     // Update is called once per frame
@@ -38,5 +56,32 @@ public class NewMonoBehaviourScript : MonoBehaviour
         {
             light.enabled = !day;
         }
+        if(day)
+        {
+            nightAmbient.Stop();
+            dayAmbient.Play();
+        }
+        else
+        {
+            dayAmbient.Stop();
+            nightAmbient.Play();
+        }
+    }
+    private void OnSoundsVolumeChanged(string name)
+    {
+        dayAmbient.volume =
+            nightAmbient.volume = GameState.isSoundsMuted
+            ? 0.0f 
+            : GameState.ambientVolume;
+    }
+
+    private void OnDestroy()
+    {
+        GameState.RemoveChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.effectsVolume));
+        GameState.RemoveChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.isSoundsMuted));
     }
 }

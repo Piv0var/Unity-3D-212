@@ -3,24 +3,49 @@ using UnityEngine;
 public class Gate1Script : MonoBehaviour
 {
     private string closedMessage = "Двери закрыты!\r\nнайди ключ";
+    private AudioSource closedSound;
 
+ 
+
+    void Start()
+    {
+        closedSound = GetComponent<AudioSource>();
+        GameState.AddChangeListener(
+          OnSoundsVolumeChanged,
+          nameof(GameState.effectsVolume));
+        GameState.AddChangeListener(
+         OnSoundsVolumeChanged,
+         nameof(GameState.isSoundsMuted));
+
+    }
+
+    void Update()
+    {
+
+    }   
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "Character")
         {
-            bool r = Random.value < 0.5f;
-            MessagesScript.ShowMessage(closedMessage + r);
+            //bool r = Random.value < 0.5f;
+            MessagesScript.ShowMessage(closedMessage);
+            closedSound.Play();
         }
     }
 
-    void Start()
+    private void OnSoundsVolumeChanged(string name) 
     {
+        closedSound.volume = GameState.effectsVolume;
 
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
-
+        GameState.RemoveChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.effectsVolume));
+        GameState.RemoveChangeListener(
+            OnSoundsVolumeChanged,
+            nameof(GameState.isSoundsMuted));
     }
 }

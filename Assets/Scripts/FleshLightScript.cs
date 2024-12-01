@@ -18,6 +18,10 @@ public class FleshLightScript : MonoBehaviour
         {
             charge = 1.0f;
         }
+        if(itemName == "SmallBattery")
+        {
+            charge = 0.5f;
+        }
     }
 
     void Update()

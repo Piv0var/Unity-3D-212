@@ -31,10 +31,15 @@ public class CameraScript : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0.0f) return;
         if (isFpv)
         {
             float wheel = Input.mouseScrollDelta.y;
             c *= 1 - wheel / 10.0f;
+
+
+
+
             GameState.isFpv = c.magnitude < 0.25f;
             c = Vector3.ClampMagnitude(c, maxDistance);
             if (c.magnitude < minDistance)

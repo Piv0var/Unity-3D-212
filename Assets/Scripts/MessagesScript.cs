@@ -27,48 +27,51 @@ public class MessagesScript : MonoBehaviour
             if (leftTime <= 0)
             {
                 messageQueue.Dequeue();
-                content.SetActive(false);   
+                content.SetActive(false);
             }
         }
         else
         {
-            if(messageQueue.Count>0)
+            if (messageQueue.Count > 0)
             {
                 Message message = messageQueue.Peek();
-                messageTMP.text = message.text;
+
+                messageTMP.text = string.IsNullOrEmpty(message.author)
+                    ? message.text
+                    : $"{message.author}: {message.text}";
+
                 leftTime = message.timeout ?? this.timeout;
                 content.SetActive(true);
             }
         }
     }
 
-    public static void ShowMessage(string message, float? timeout = null)
+
+    public static void ShowMessage(string message, string author = null, float? timeout = null)
     {
-        if (messageQueue.Count > 0)
+        foreach (var msg in messageQueue)
         {
-            Message msg = messageQueue.Peek();
-            if (msg.text == message)
+            if (msg.text == message && msg.author == author)
             {
-                Debug.Log($"Message '{message}' ignored");
+                Debug.Log($"Message '{message}' from author '{author}' ignored");
                 return;
             }
         }
-   
-            messageQueue.Enqueue(new Message
-            {
-                text = message,
-                timeout = timeout
-            });
-        //instance.messageTMP.text = message;
-        //instance.leftTime = instance.timeout;
-        //instance.content.SetActive(true);
+
+        messageQueue.Enqueue(new Message
+        {
+            text = message,
+            author = author,
+            timeout = timeout
+        });
+
+        Debug.Log($"Message '{message}' from author '{author}' added to queue");
     }
 
     private class Message
     {
-        public string text { get; set;}
-        public float? timeout { get; set;}
+        public string text { get; set; }      
+        public string author { get; set; }   
+        public float? timeout { get; set; }  
     }
-
-
 }
