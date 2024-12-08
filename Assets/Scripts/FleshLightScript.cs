@@ -5,6 +5,7 @@ public class FleshLightScript : MonoBehaviour
     private float charge;
     private float worktime = 10.0f;
     private Light flashLight;
+    public float chargeLevel => charge;
     void Start()
     {
         charge = 1.0f;

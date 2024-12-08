@@ -3,20 +3,24 @@ using UnityEngine;
 
 public class MessagesScript : MonoBehaviour
 {
-    private float timeout = 5.0f;
+    private float timeout = 2.0f;
     private float leftTime;
     private GameObject content;
     private TMPro.TextMeshProUGUI messageTMP;
     private static MessagesScript instance;
     private static Queue<Message> messageQueue = new Queue<Message>();
+    private string[] events = { "KeyPoint", "Gate" };
 
     void Start()
     {
         instance = this;
         content = transform.Find("Content").gameObject;
-        messageTMP = transform.Find("Content/MessageText")
+        messageTMP = transform
+            .Find("Content/MessageText")
             .GetComponent<TMPro.TextMeshProUGUI>();
         leftTime = 0;
+
+        GameState.AddEventListener(OnGameEvent);
     }
 
     void Update()
@@ -46,6 +50,25 @@ public class MessagesScript : MonoBehaviour
         }
     }
 
+    private void OnGameEvent(string eventName, object data)
+    {
+        {
+            if (data is GameEvents.IMessage m)
+            {
+                ShowMessage(m.message);
+            }
+        }
+        { 
+            if (data is GameEvents.GateEvent e)
+            {
+                ShowMessage(e.message);
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        GameState.RemoveEventListener(OnGameEvent);
+    }
 
     public static void ShowMessage(string message, string author = null, float? timeout = null)
     {

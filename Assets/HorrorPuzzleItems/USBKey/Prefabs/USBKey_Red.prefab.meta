@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9fc0d4010bbf28b4594072e72b8655ab
-DefaultImporter:
+guid: ac289c334f1e2554fa2c3f187a354c4c
+PrefabImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
@@ -9,6 +9,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 250188
   packageName: Retro PSX Horror Puzzle Item Pack (Icon+LowPoly)
-  packageVersion: 
-  assetPath: Assets/Scenes/SampleScene.unity
-  uploadId: 0
+  packageVersion: 1.0
+  assetPath: Assets/HorrorPuzzleItems/USBKey/Prefabs/USBKey_Red.prefab
+  uploadId: 588867
