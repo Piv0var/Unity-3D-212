@@ -6,6 +6,9 @@ public class GameState
 {
     public static bool isDay { get; set; }
     public static bool isFpv { get; set; }
+    public static float lookSensitivityX { get; set; } = 0.05f;
+    public static float lookSensitivityY { get; set; } = -0.025f;
+    public static float fpvRange { get; set; } = 1f;
     public static int room { get; set; } = 1;
 
     public static Dictionary<String, object> collectedItems { get; private set; } = new();
